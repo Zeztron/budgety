@@ -1,18 +1,27 @@
 ////////// B U D G E T  C O N T R O L L E R //////////
 var budgetController = (function () {
-    // Create expense and income function contructors.
+    // Create expense and income function contructors //
     var Expense = function(id, description, value){
         this.id = id;
         this.description = description;
         this.value = value;
     };
-
     var Income = function(id, description, value){
         this.id = id;
         this.description = description;
         this.value = value;
     };
-    // Store the income and expense data in arrays
+
+    // Calculate the total //
+    var calculateTotal = function(type) {
+        var sum = 0;
+        data.allItems[type].forEach(function(cur) {
+            sum += cur.value;
+        });
+        data.totals[type] = sum;
+    };
+
+    // Store the income and expense data in arrays //
     var data = {
         allItems: {
             exp: [],
@@ -21,7 +30,9 @@ var budgetController = (function () {
         totals: {
             exp: 0,
             inc: 0
-        }
+        },
+        budget: 0,
+        percentage: -1
     };
     // Add new item to the budget controller
     return {
@@ -44,7 +55,34 @@ var budgetController = (function () {
             //return the new element
             return newItem;
         },
-    }
+
+        calculateBudget: function() {
+            // Calculate total income and expenses
+            calculateTotal('exp');
+            calculateTotal('inc');
+            // Calculate the budget: income - expenses
+            data.budget = data.totals.inc - data.totals.exp;
+            // Calculate the percentage of income that we spent.
+            if (data.totals.inc > 0) {
+                data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
+            } else {
+                data.percentage = -1;
+            }
+        },
+
+        getBudget: function() {
+            return {
+                budget: data.budget,
+                totalInc: data.totals.inc,
+                totalExp: data.totals.exp,
+                percentage: data.percentage
+            }
+        },
+
+        testing: function() {
+            console.log(data);
+        }
+    };
 })();
 
 ////////// U I  C O N T R O L L E R //////////
@@ -120,11 +158,12 @@ var controller = (function(budgetCtrl, UICtrl) {
     };
 
     var updateBudget = function() {
-        //1. Calculate Budget.
-
-        //2. Return the budget
-
+        //1. Calculate the budget
+        budgetCtrl.calculateBudget();
+        //2. return the budget
+        var budget = budgetCtrl.getBudget();
         //3. Display budget.
+        console.log(budget);
     };
 
     var ctrlAddItem = function() {
