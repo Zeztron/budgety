@@ -1,5 +1,3 @@
-
-
 ////////// B U D G E T  C O N T R O L L E R //////////
 var budgetController = (function () {
     // Create expense and income function contructors.
@@ -14,7 +12,6 @@ var budgetController = (function () {
         this.description = description;
         this.value = value;
     };
-
     // Store the income and expense data in arrays
     var data = {
         allItems: {
@@ -26,36 +23,28 @@ var budgetController = (function () {
             inc: 0
         }
     };
-
     // Add new item to the budget controller
     return {
         addItem: function(type, des, val) {
             var newItem, ID;
-
             // Create new ID
             if (data.allItems[type].length > 0) {
                 ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
             } else {
                 ID = 0;
             }
-
             //Create new item based on 'inc' or 'exp' type
             if (type === 'exp') {
                 newItem = new Expense(ID, des, val);
             } else if (type === 'inc') {
                 newItem = new Income(ID, des, val);
             }
-
             // push it into the data structure
             data.allItems[type].push(newItem);
-
             //return the new element
             return newItem;
         },
-
-
     }
-
 })();
 
 ////////// U I  C O N T R O L L E R //////////
@@ -78,7 +67,7 @@ var UIController = (function() {
                 value: document.querySelector(DOMstrings.inputValue).value
             };
         },
-
+        // Add the items on the list and update them to UI
         addListItem: function(obj, type) {
             var html, newHtml, element;
             // Create HTML string with placeholder text
@@ -97,17 +86,29 @@ var UIController = (function() {
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
         },
 
-        getDOMstrings: function() { // Expose the private DOMstrings to make it public
+        // Clear the fields after input
+        clearFields: function() {
+            var fields, fieldsArr;
+            // select the input fields
+            fields = document.querySelectorAll(DOMstrings.inputDescription + ',' + DOMstrings.inputValue);
+            // turn them into array to slice
+            fieldsArr = Array.prototype.slice.call(fields);
+            // Reset them to empty string
+            fieldsArr.forEach(function(current, index, array) {
+                current.value = "";
+            });
+            // Focus on description
+            fieldsArr[0].focus();
+        },
+        // Expose the private DOMstrings to make it public
+        getDOMstrings: function() {
             return DOMstrings;
         }
     };
-
-
 })();
-
 ////////// G L O B A L  A P P  C O N T R O L L E R //////////
 var controller = (function(budgetCtrl, UICtrl) {
-
+    // Set up click and keypress listeners
     var setupEventListeners = function() {
         var DOM = UICtrl.getDOMstrings();
         document.querySelector(DOM.inputBtn).addEventListener("click", ctrlAddItem);
@@ -126,7 +127,9 @@ var controller = (function(budgetCtrl, UICtrl) {
         newItem = budgetCtrl.addItem(input.type, input.description, input.value);
         //3. Add the item to the user interface.
         UICtrl.addListItem(newItem, input.type);
-        //4. Calculate budget.
+        //4. Clearfields
+        UICtrl.clearFields();
+        //5 Calculate Budget.
 
         //5. Display budget.
     };
