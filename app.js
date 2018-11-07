@@ -143,6 +143,11 @@ var UIController = (function() {
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
         },
 
+        deleteListItem: function(selectorID) {
+            var element = document.getElementById(selectorID)
+            element.parentNode.removeChild(element);
+        },
+
         // Clear the fields after input
         clearFields: function() {
             var fields, fieldsArr;
@@ -198,13 +203,22 @@ var controller = (function(budgetCtrl, UICtrl) {
         UICtrl.displayBudget(budget);
     };
 
+    var updatePercentages = function() {
+        //1. Calculate the percentages
+
+        //2. Read percentages from the budget controller
+
+        //3. Update the UI with the new percentages
+
+    };
+
     var ctrlAddItem = function() {
         var input, newItem;
         //1. Get the field input data
         input = UICtrl.getInput();
 
         if (input.description != "" && !isNaN(input.value) && input.value > 0) {
-            //2. Add item to budget CONTROLLER
+            //2. Add item to budget controller
             newItem = budgetCtrl.addItem(input.type, input.description, input.value);
             //3. Add the item to the user interface.
             UICtrl.addListItem(newItem, input.type);
@@ -212,6 +226,8 @@ var controller = (function(budgetCtrl, UICtrl) {
             UICtrl.clearFields();
             //5. Calculate and update budget.
             updateBudget();
+            //6. Calculate and update percentages.
+            updatePercentages();
         }
     };
 
@@ -225,8 +241,11 @@ var controller = (function(budgetCtrl, UICtrl) {
             //1. delete item from data structure.
             budgetCtrl.deleteItem(type, ID);
             //2. delete item from the user interface.
-
+            UICtrl.deleteListItem(itemID);
             //3. Update and show the new budget.
+            updateBudget();
+            //4. Calculate and update percentages.
+            updatePercentages()
         }
     };
 
