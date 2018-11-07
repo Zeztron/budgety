@@ -1,13 +1,35 @@
 
 
-// BUDGET CONTROLLER
+////////// B U D G E T  C O N T R O L L E R //////////
 var budgetController = (function () {
+    // Create expense and income function contructors.
+    var Expense = function(id, description, value){
+        this.id = id;
+        this.description = description;
+        this.value = value;
+    };
 
-    // Some code
+    var Income = function(id, description, value){
+        this.id = id;
+        this.description = description;
+        this.value = value;
+    };
+
+    // Store the income and expense data in arrays
+    var data = {
+        allItems: {
+            exp: [],
+            inc: []
+        },
+        totals: {
+            exp: 0,
+            inc: 0
+        }
+    }
 
 })();
 
-//UI CONTROLLER
+////////// U I  C O N T R O L L E R //////////
 var UIController = (function() {
     var DOMstrings = {
         inputType: ".add__type",
@@ -33,7 +55,7 @@ var UIController = (function() {
 
 })();
 
-// GLOBAL APP CONTROLLER
+////////// G L O B A L  A P P  C O N T R O L L E R //////////
 var controller = (function(budgetCtrl, UICtrl) {
 
     var setupEventListeners = function() {
