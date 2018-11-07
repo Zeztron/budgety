@@ -34,8 +34,8 @@ var budgetController = (function () {
         budget: 0,
         percentage: -1
     };
-    // Add new item to the budget controller
     return {
+        // Add new item to the budget controller
         addItem: function(type, des, val) {
             var newItem, ID;
             // Create new ID
@@ -56,13 +56,26 @@ var budgetController = (function () {
             return newItem;
         },
 
+        // Delete item from the budget controller
+        deleteItem: function(type, id) {
+            var ids, index;
+            ids = data.allItems[type].map(function(current) {
+                return current.id;
+            });
+            index = ids.indexOf(id);
+            if (index !== -1) {
+                data.allItems[type].splice(index, 1);
+            }
+        },
+
+        // Calculate the budget in the budget controller
         calculateBudget: function() {
-            // Calculate total income and expenses
+            // total income and expenses
             calculateTotal('exp');
             calculateTotal('inc');
-            // Calculate the budget: income - expenses
+            // budget: income - expenses
             data.budget = data.totals.inc - data.totals.exp;
-            // Calculate the percentage of income that we spent.
+            // Percentage of income. Expense/income * 100
             if (data.totals.inc > 0) {
                 data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
             } else {
@@ -208,10 +221,9 @@ var controller = (function(budgetCtrl, UICtrl) {
         if (itemID) {
             splitID = itemID.split('-');
             type = splitID[0];
-            ID = splitID[1];
-
+            ID = parseInt(splitID[1]);
             //1. delete item from data structure.
-
+            budgetCtrl.deleteItem(type, ID);
             //2. delete item from the user interface.
 
             //3. Update and show the new budget.
