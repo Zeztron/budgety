@@ -11,5 +11,5 @@ Budget app made using JavaScript
 
 Beautiful and fully functioning budget tracking app that notes your income and expenses,
 totals the budget, and also displays the percentages of income spent on expenses.
->> To delete an item, just hover over it and an "x" should pop up. :bowtie:
+> To delete an item, just hover over it and an "x" should pop up. :bowtie:
 
